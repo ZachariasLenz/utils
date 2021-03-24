@@ -15,3 +15,6 @@ sudo snap refresh
 # Update nix packages
 nix-env -u
 nix-env -if https://github.com/srid/neuron/archive/master.tar.gz
+
+# Update spotifyd
+download-spotify
