@@ -1,5 +1,4 @@
-echo "Make sure you have your config file stored in $HOME/.config/spotifyd and
-the systemd service file in $HOME/.config/systemd/user"
+#!/bin/bash
 
 # Get Spotifyd
 curl -sL https://github.com/Spotifyd/spotifyd/releases/latest | rg -o "Spotifyd/spotifyd/releases/download/.*/spotifyd-linux-full.tar.gz" | xargs -I {} curl -sLO https://github.com/{}
@@ -11,5 +10,12 @@ rm spotifyd-linux-full.tar.gz
 sudo ln -sf ~/.local/bin/spotifyd /usr/bin/spotifyd
 
 # Start the systemd service
-systemctl --user start spotifyd.service
-systemctl --user enable spotifyd.service
+if [ -f "$HOME/.config/systemd/user/spotifyd.service" ]; then
+    if [[ ! $(systemctl --user --type service | grep "spotifyd") ]]; then
+        systemctl --user start spotifyd.service
+        systemctl --user enable spotifyd.service
+    fi
+else
+    echo "Make sure you have your config file stored in $HOME/.config/spotifyd and the systemd service file in $HOME/.config/systemd/user"
+    echo "Afterwards, run: systemctl --user start spotifyd.service && systemctl --user enable spotifyd.service"
+fi
